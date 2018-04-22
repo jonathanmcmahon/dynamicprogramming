@@ -6,7 +6,7 @@ is_word that will tell us if a string is a valid single word.
 """
 import numpy as np
 
-dictionary = ["a", "an", "apple", "ate", "big", "olifaunt", "oversized", "rapacious"]
+dictionary = ["a", "an", "apple", "ate", "big", "eat", "olifaunt", "oversized", "rapacious"]
 
 
 def is_word(s):
@@ -25,10 +25,11 @@ def sequence_of_words(s):
         for end_idx, end_letter in enumerate(starting_letter_set):
             if end_idx >= start_idx:
                 table[start_idx][end_idx] = is_word(s[start_idx:end_idx + 1])
-                # This allows us to easily
+                # This allows us to easily collapse the table down and ensure we have a valid sequence
                 if table[start_idx][end_idx] == 1:
                     table[start_idx][start_idx:end_idx] = 1
-    return np.all(np.sum(table, axis=0))
+    print(np.sum(table, axis=0))
+    return np.all(np.sum(table, axis=0) == 1)
 
 
 def run_test_suite(cases):
@@ -39,15 +40,15 @@ def run_test_suite(cases):
     """
     for case in cases:
         string, validity = case
-        assert sequence_of_words(string) == validity
+        assert sequence_of_words(string) == validity, "Test of %s failed." % string
     print("All %d test cases passed." % len(cases))
 
 
-test_cases = [("arapaciousappleateanoversizedolifaunt", True),
+test_cases = [("anapple", True),
+              ("arapaciousappleateanoversizedolifaunt", True),
               ("anappleelephantoversizedate", False),
               ("a", True),
-              ("anapple", True),
-              ("b", False)
-              ]
+              ("b", False),
+              ("appleat", False)]
 
 run_test_suite(test_cases)
